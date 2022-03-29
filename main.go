@@ -2,13 +2,20 @@ package main
 
 import (
 	"fmt"
-
-	"rsc.io/quote/v4"
+	"os"
 )
 
 // searches all files in a directory tree for instances of a specified text
 func main() {
 	// test
-	fmt.Println("Hello, World!")
-	fmt.Println(quote.Go())
+	userArgs := os.Args[1:]
+
+	// validate args
+	if len(userArgs) < 1 {
+		fmt.Println("Please provide an argument as in\n\tgo run . textToMatch")
+		return
+	}
+
+	// test print arg
+	fmt.Println("Finding all occurrences of \"" + userArgs[0] + "\" in current directory...")
 }
