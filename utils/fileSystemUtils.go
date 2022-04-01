@@ -9,7 +9,7 @@ import (
 
 // Creates temporary directories using the given tree
 // source: https://pkg.go.dev/path/filepath#Walk
-func PrepareTestDirTree(tree string) (string, error) {
+func prepareTestDirTree(tree string) (string, error) {
 	tmpDir, err := os.MkdirTemp("", "")
 	if err != nil {
 		return "", fmt.Errorf("error creating temp directory: %v\n", err)
@@ -24,38 +24,65 @@ func PrepareTestDirTree(tree string) (string, error) {
 	return tmpDir, nil
 }
 
-// Prints names of all entires in the current directory
-// source: https://pkg.go.dev/path/filepath#Walk
-func PrintAllFilenames() {
+// Counts the occurrences of a given string in a file
+func countOccurrencesInFile(filepath string, matchString string) {
+	// open the file
+
+	// search the file until finding the string
+
+	// return the total count
+}
+
+// Adapted from https://pkg.go.dev/path/filepath#Walk
+func getAllDirEntries() ([]string, error) {
 	// create sample directory entries
-	tmpDir, err := PrepareTestDirTree("dir/to/walk")
+	tmpDir, err := prepareTestDirTree("temp/sample")
 	if err != nil {
 		fmt.Printf("unable to create test dir tree: %v\n", err)
-		return
+		return nil, err
 	}
 
 	// delete sample directory entries at end of function
 	defer os.RemoveAll(tmpDir)
 
-	// enter new sample directory root
-	os.Chdir(tmpDir)
-
-	// traverse all directory items except the skipped one, and print their names
-	fmt.Println("On Unix:")
+	// traverse all directory items, and store their names
+	// DEBUG print every visited file path
+	// fmt.Println("Assuming Unix paths:")
+	var dirEntryPaths []string
 	err = filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
+		// handle error
 		if err != nil {
-			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
+			fmt.Printf("failed to access %q: %v\n", path, err)
 			return err
 		}
 
-		// print directory entry name
-		fmt.Printf("visited file or dir: %q\n", path)
+		// DEBUG print visited file path
+		// fmt.Printf("visited file or dir: %q\n", path)
+		// append path to array kept in outer scope
+		dirEntryPaths = append(dirEntryPaths, path)
+
 		return nil
 	})
 
 	// handle filepath.Walk() error
 	if err != nil {
 		fmt.Printf("error walking the path %q: %v\n", tmpDir, err)
-		return
+		return nil, err
+	}
+
+	return dirEntryPaths, nil
+}
+
+// Prints names of all entires in the current directory
+func PrintAllFilenames() {
+	dirEntryPaths, err := getAllDirEntries()
+
+	if err != nil {
+		fmt.Println("error getting all directory names")
+	}
+
+	fmt.Print("printing all directory names\n\n")
+	for _, path := range dirEntryPaths {
+		fmt.Println(path)
 	}
 }

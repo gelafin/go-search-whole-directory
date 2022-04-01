@@ -25,5 +25,5 @@ func main() {
 	utils.PrintAllFilenames()
 
 	// print done message
-	fmt.Println(DoneMessage)
+	fmt.Print("\n" + DoneMessage)
 }
