@@ -2,13 +2,32 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	"rsc.io/quote/v4"
+	"github.com/gelafin/go-search-whole-directory/utils"
 )
 
 // searches all files in a directory tree for instances of a specified text
 func main() {
-	// test
-	fmt.Println("Hello, World!")
-	fmt.Println(quote.Go())
+	// get command-line args
+	userArgs := os.Args[1:]
+
+	// validate necessary args were passed
+	if len(userArgs) < 1 {
+		fmt.Println(ErrorMessages[MissingCommandLineArg])
+		return
+	}
+
+	searchTerm := userArgs[0]
+
+	// print start message
+	fmt.Println("Finding all occurrences of \"" + searchTerm + "\" in current directory...")
+
+	// print all directory entries' paths
+	// utils.PrintAllFilepaths()
+
+	utils.ShowOccurrencesInCurrentDirectory(searchTerm)
+
+	// print done message
+	fmt.Print("\n" + DoneMessage)
 }
