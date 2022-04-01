@@ -21,10 +21,7 @@ func main() {
 	searchTerm := userArgs[0]
 
 	// print start message
-	fmt.Println("Finding all occurrences of \"" + searchTerm + "\" in current directory...")
-
-	// print all directory entries' paths
-	// utils.PrintAllFilepaths()
+	fmt.Print("Finding all occurrences of \"" + searchTerm + "\" in current directory...\n\n")
 
 	utils.ShowOccurrencesInCurrentDirectory(searchTerm)
 
