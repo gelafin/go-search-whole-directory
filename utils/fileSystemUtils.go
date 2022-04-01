@@ -72,8 +72,8 @@ func findOccurrencesInCurrentDirectory(searchTermRegEx *regexp.Regexp) (map[stri
 		matchesInFile, err := findOccurrencesInFile(path, searchTermRegEx)
 
 		// skip errored files and add valid counts to the total
-		if err == nil && len(matchesInFile) > 1 {
-			matchesInDir[path] = matchesInFile[1:]
+		if err == nil && len(matchesInFile) > 0 {
+			matchesInDir[path] = matchesInFile
 		}
 	}
 
@@ -97,6 +97,7 @@ func findOccurrencesInFile(filepath string, searchTerm *regexp.Regexp) ([][]byte
 	// For text files only,
 	// search the file for all matches
 	if util.IsText(fileData) {
+		// fmt.Println("\tDEBUG: looks like text file!")
 		matchesInFile = append(matchesInFile, searchTerm.FindAll(fileData, -1)...)
 	}
 
@@ -117,8 +118,6 @@ func getAllDirEntries() ([]string, error) {
 	defer os.RemoveAll(tmpDir)
 
 	// traverse all directory items, and store their names
-	// DEBUG print every visited file path
-	// fmt.Println("Assuming Unix paths:")
 	var dirEntryPaths []string
 	err = filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
 		// handle error
@@ -127,8 +126,6 @@ func getAllDirEntries() ([]string, error) {
 			return err
 		}
 
-		// DEBUG print visited file path
-		// fmt.Printf("visited file or dir: %q\n", path)
 		// append path to array kept in outer scope
 		dirEntryPaths = append(dirEntryPaths, path)
 
