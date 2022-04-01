@@ -24,9 +24,9 @@ func main() {
 	fmt.Println("Finding all occurrences of \"" + searchTerm + "\" in current directory...")
 
 	// print all directory entries' paths
-	utils.PrintAllFilepaths()
+	// utils.PrintAllFilepaths()
 
-	utils.CountOccurrencesInCurrentDirectory(searchTerm)
+	utils.ShowOccurrencesInCurrentDirectory(searchTerm)
 
 	// print done message
 	fmt.Print("\n" + DoneMessage)
