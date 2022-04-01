@@ -1,6 +1,4 @@
-//go:build !windows && !plan9
-
-package main
+package utils
 
 import (
 	"fmt"
@@ -9,7 +7,9 @@ import (
 	"path/filepath"
 )
 
-func prepareTestDirTree(tree string) (string, error) {
+// Creates temporary directories using the given tree
+// source: https://pkg.go.dev/path/filepath#Walk
+func PrepareTestDirTree(tree string) (string, error) {
 	tmpDir, err := os.MkdirTemp("", "")
 	if err != nil {
 		return "", fmt.Errorf("error creating temp directory: %v\n", err)
@@ -24,10 +24,11 @@ func prepareTestDirTree(tree string) (string, error) {
 	return tmpDir, nil
 }
 
-func main() {
-	// source: https://pkg.go.dev/path/filepath#Walk
+// Prints names of all entires in the current directory
+// source: https://pkg.go.dev/path/filepath#Walk
+func PrintAllFilenames() {
 	// create sample directory entries
-	tmpDir, err := prepareTestDirTree("dir/to/walk/skip")
+	tmpDir, err := PrepareTestDirTree("dir/to/walk/skip")
 	if err != nil {
 		fmt.Printf("unable to create test dir tree: %v\n", err)
 		return
