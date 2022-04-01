@@ -18,11 +18,15 @@ func main() {
 		return
 	}
 
-	// print start message
-	fmt.Println("Finding all occurrences of \"" + userArgs[0] + "\" in current directory...")
+	searchTerm := userArgs[0]
 
-	// print all visited items
-	utils.PrintAllFilenames()
+	// print start message
+	fmt.Println("Finding all occurrences of \"" + searchTerm + "\" in current directory...")
+
+	// print all directory entries' paths
+	utils.PrintAllFilepaths()
+
+	utils.CountOccurrencesInCurrentDirectory(searchTerm)
 
 	// print done message
 	fmt.Print("\n" + DoneMessage)

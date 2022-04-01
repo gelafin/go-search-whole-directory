@@ -5,6 +5,9 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
+
+	"golang.org/x/tools/godoc/util"
 )
 
 // Creates temporary directories using the given tree
@@ -24,13 +27,58 @@ func prepareTestDirTree(tree string) (string, error) {
 	return tmpDir, nil
 }
 
-// Counts the occurrences of a given string in a file
-func countOccurrencesInFile(filepath string, matchString string) {
-	// open the file
+// Counts the occurrences of a given string in every file in the current directory,
+// not including file and directory names,
+// and returns the search term plus its immediate surroundings (10 chars in each direction)
+func CountOccurrencesInCurrentDirectory(searchTerm string) (int, error) {
+	previewCharCount := "10"
 
+	// get a list of all files and folders to check
+	allPaths, err := getAllDirEntries()
+
+	// handle error in getting paths
+	if err != nil {
+		return -1, err
+	}
+
+	// make regex including search term plus some surrounding chars.
+	// Example: .{0,10}kindness.{0,10}
+	searchTermRegEx := regexp.MustCompile(`.{0,` + previewCharCount + `}` + searchTerm + `.{0,` + previewCharCount + `}`)
+	total := 0
+	for _, path := range allPaths {
+		// get number of occurrences in this file
+		matchCount, err := findOccurrencesInFile(path, searchTermRegEx)
+
+		// skip errored files and add valid counts to the total
+		if err == nil {
+			total += matchCount
+		}
+	}
+
+	return total, nil
+}
+
+// Finds the occurrences of a given string in a file,
+// and returns a list of the matches
+func findOccurrencesInFile(filepath string, searchTerm *regexp.Regexp) (int, error) {
+	total := 0
+
+	// open the file
+	fileData, err := os.ReadFile(filepath)
+
+	// handle file open error by returning error to caller
+	if err != nil {
+		return -1, err
+	}
+
+	// For text files only,
 	// search the file until finding the string
+	if util.IsText(fileData) {
+
+	}
 
 	// return the total count
+	return total, nil
 }
 
 // Adapted from https://pkg.go.dev/path/filepath#Walk
@@ -74,7 +122,7 @@ func getAllDirEntries() ([]string, error) {
 }
 
 // Prints names of all entires in the current directory
-func PrintAllFilenames() {
+func PrintAllFilepaths() {
 	dirEntryPaths, err := getAllDirEntries()
 
 	if err != nil {
