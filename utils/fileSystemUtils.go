@@ -28,7 +28,7 @@ func PrepareTestDirTree(tree string) (string, error) {
 // source: https://pkg.go.dev/path/filepath#Walk
 func PrintAllFilenames() {
 	// create sample directory entries
-	tmpDir, err := PrepareTestDirTree("dir/to/walk/skip")
+	tmpDir, err := PrepareTestDirTree("dir/to/walk")
 	if err != nil {
 		fmt.Printf("unable to create test dir tree: %v\n", err)
 		return
@@ -40,21 +40,12 @@ func PrintAllFilenames() {
 	// enter new sample directory root
 	os.Chdir(tmpDir)
 
-	// list which entries to skip
-	subDirToSkip := "skip"
-
 	// traverse all directory items except the skipped one, and print their names
 	fmt.Println("On Unix:")
 	err = filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
 			return err
-		}
-
-		// if directory entry matches skip condition, return the SkipDir "error"
-		if info.IsDir() && info.Name() == subDirToSkip {
-			fmt.Printf("skipping a dir without errors: %+v \n", info.Name())
-			return filepath.SkipDir
 		}
 
 		// print directory entry name
